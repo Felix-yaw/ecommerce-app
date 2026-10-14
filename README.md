@@ -36,18 +36,20 @@ A modern, Dribbble-inspired visual language:
 
 ```
 lib/
-  main.dart                 # App root, owns the ShopState instance
+  main.dart                 # App root, provides the ShopState instance
   data/                     # In-memory catalogue (SampleData)
   models/                   # Immutable Product / Category / CartItem
   navigation/               # Centralised Navigator helpers (AppRoutes)
   screens/                  # RootShell + feature screens
-  state/                    # ShopState (ChangeNotifier) + ShopScope
+  state/                    # ShopState (ChangeNotifier)
   theme/                    # Colours and Material 3 theme
   widgets/                  # Reusable presentational widgets
 ```
 
-State lives in a single `ChangeNotifier` (`ShopState`) exposed through an
-`InheritedNotifier` (`ShopScope`) — no third-party state-management package.
+State lives in a single `ChangeNotifier` (`ShopState`), provided to the tree with
+the [`provider`](https://pub.dev/packages/provider) package's
+`ChangeNotifierProvider`. Widgets subscribe with `context.watch<ShopState>()`
+and mutate with `context.read<ShopState>()`.
 
 ## Performance notes
 

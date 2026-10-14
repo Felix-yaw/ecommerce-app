@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
 import '../models/product.dart';
-import '../state/shop_scope.dart';
+import '../state/shop_state.dart';
 import '../theme/app_colors.dart';
 import 'network_product_image.dart';
 import 'price_text.dart';
@@ -23,7 +24,7 @@ class ProductCard extends StatelessWidget {
   final VoidCallback onTap;
 
   void _quickAdd(BuildContext context) {
-    ShopScope.read(context).addToCart(product);
+    context.read<ShopState>().addToCart(product);
     ScaffoldMessenger.of(context)
       ..hideCurrentSnackBar()
       ..showSnackBar(

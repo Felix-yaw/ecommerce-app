@@ -1,9 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
 import '../data/sample_data.dart';
 import '../models/product.dart';
 import '../navigation/app_routes.dart';
-import '../state/shop_scope.dart';
+import '../state/shop_state.dart';
 import '../theme/app_colors.dart';
 import '../widgets/network_product_image.dart';
 import '../widgets/price_text.dart';
@@ -43,7 +44,7 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
       (!_needsSize || _selectedSize != null);
 
   void _addToCart({bool goToCart = false}) {
-    ShopScope.read(context).addToCart(
+    context.read<ShopState>().addToCart(
       product,
       quantity: _quantity,
       color: _selectedColor,

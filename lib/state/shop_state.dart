@@ -6,8 +6,8 @@ import '../models/product.dart';
 
 /// Single source of truth for the shopping experience.
 ///
-/// It is a plain [ChangeNotifier] so we avoid external dependencies and keep
-/// rebuilds scoped: widgets listen through [ShopScope] and `ListenableBuilder`.
+/// Exposed via `provider`'s `ChangeNotifierProvider`, so widgets subscribe with
+/// `context.watch<ShopState>()` and mutate with `context.read<ShopState>()`.
 class ShopState extends ChangeNotifier {
   ShopState() {
     _catalogue = SampleData.products;

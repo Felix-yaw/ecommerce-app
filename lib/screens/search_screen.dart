@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
 import '../models/product.dart';
 import '../navigation/app_routes.dart';
-import '../state/shop_scope.dart';
 import '../state/shop_state.dart';
 import '../theme/app_colors.dart';
 import '../widgets/empty_state.dart';
@@ -32,7 +32,7 @@ class _SearchScreenState extends State<SearchScreen> {
 
   @override
   Widget build(BuildContext context) {
-    final ShopState shop = ShopScope.read(context);
+    final ShopState shop = context.read<ShopState>();
     final List<Product> results =
         _query.trim().isEmpty ? const <Product>[] : shop.search(_query);
 

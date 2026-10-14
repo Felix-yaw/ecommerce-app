@@ -1,8 +1,8 @@
 import 'dart:ui';
 
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
-import '../state/shop_scope.dart';
 import '../state/shop_state.dart';
 import '../theme/app_colors.dart';
 import 'cart_screen.dart';
@@ -29,7 +29,7 @@ class _RootShellState extends State<RootShell> {
 
   @override
   Widget build(BuildContext context) {
-    final ShopState shop = ShopScope.read(context);
+    final ShopState shop = context.read<ShopState>();
 
     final List<Widget> tabs = <Widget>[
       const HomeScreen(),

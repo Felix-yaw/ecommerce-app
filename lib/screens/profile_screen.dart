@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
-import '../state/shop_scope.dart';
 import '../state/shop_state.dart';
 import '../theme/app_colors.dart';
 
@@ -10,7 +10,7 @@ class ProfileScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final ShopState shop = ShopScope.of(context);
+    final ShopState shop = context.watch<ShopState>();
 
     return Scaffold(
       appBar: AppBar(

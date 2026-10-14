@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
 import '../data/sample_data.dart';
 import '../models/product.dart';
 import '../models/product_category.dart';
 import '../navigation/app_routes.dart';
-import '../state/shop_scope.dart';
 import '../state/shop_state.dart';
 import '../theme/app_colors.dart';
 import '../widgets/product_card.dart';
@@ -38,7 +38,7 @@ class _CategoryProductsScreenState extends State<CategoryProductsScreen> {
   }
 
   List<Product> get _products {
-    final ShopState shop = ShopScope.read(context);
+    final ShopState shop = context.read<ShopState>();
     final List<Product> items = shop.catalogue
         .where(
           (Product p) =>

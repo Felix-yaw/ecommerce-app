@@ -7,15 +7,15 @@ import 'package:ecommerce_app/screens/product_detail_screen.dart';
 import 'package:ecommerce_app/screens/profile_screen.dart';
 import 'package:ecommerce_app/screens/search_screen.dart';
 import 'package:ecommerce_app/screens/wishlist_screen.dart';
-import 'package:ecommerce_app/state/shop_scope.dart';
 import 'package:ecommerce_app/state/shop_state.dart';
 import 'package:ecommerce_app/theme/app_theme.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:provider/provider.dart';
 
 Widget _wrap(ShopState shop, Widget child) {
-  return ShopScope(
-    state: shop,
+  return ChangeNotifierProvider<ShopState>.value(
+    value: shop,
     child: MaterialApp(
       debugShowCheckedModeBanner: false,
       theme: AppTheme.light(),

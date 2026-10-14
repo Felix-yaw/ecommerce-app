@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
 import '../models/cart_item.dart';
 import '../navigation/app_routes.dart';
-import '../state/shop_scope.dart';
 import '../state/shop_state.dart';
 import '../theme/app_colors.dart';
 import '../widgets/cart_line_tile.dart';
@@ -18,7 +18,7 @@ class CartScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final ShopState shop = ShopScope.of(context);
+    final ShopState shop = context.watch<ShopState>();
 
     return Scaffold(
       appBar: AppBar(

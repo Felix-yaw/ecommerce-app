@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
 import '../models/product.dart';
 import '../navigation/app_routes.dart';
-import '../state/shop_scope.dart';
 import '../state/shop_state.dart';
 import '../theme/app_colors.dart';
 import '../widgets/empty_state.dart';
@@ -17,7 +17,7 @@ class WishlistScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final ShopState shop = ShopScope.of(context);
+    final ShopState shop = context.watch<ShopState>();
     final List<Product> products = shop.wishlistProducts;
 
     return Scaffold(

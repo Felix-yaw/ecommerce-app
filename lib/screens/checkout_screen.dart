@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
 import '../models/cart_item.dart';
-import '../state/shop_scope.dart';
 import '../state/shop_state.dart';
 import '../theme/app_colors.dart';
 import '../widgets/network_product_image.dart';
@@ -29,7 +29,7 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
     await Future<void>.delayed(const Duration(milliseconds: 900));
     if (!mounted) return;
 
-    final ShopState shop = ShopScope.read(context);
+    final ShopState shop = context.read<ShopState>();
     final String total = '\$${shop.total.toStringAsFixed(2)}';
     shop.clearCart();
     setState(() => _placing = false);
@@ -45,7 +45,7 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
 
   @override
   Widget build(BuildContext context) {
-    final ShopState shop = ShopScope.of(context);
+    final ShopState shop = context.watch<ShopState>();
     final List<CartItem> items = shop.cartItems;
 
     if (items.isEmpty && !_placing) {

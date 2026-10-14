@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
 import '../data/sample_data.dart';
 import '../models/product.dart';
 import '../models/product_category.dart';
 import '../navigation/app_routes.dart';
-import '../state/shop_scope.dart';
 import '../state/shop_state.dart';
 import '../theme/app_colors.dart';
 import '../widgets/badged_icon_button.dart';
@@ -20,7 +20,7 @@ class HomeScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final ShopState shop = ShopScope.of(context);
+    final ShopState shop = context.watch<ShopState>();
 
     return Scaffold(
       body: CustomScrollView(
