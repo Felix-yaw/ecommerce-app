@@ -387,8 +387,9 @@ abstract final class SampleData {
     ),
   ];
 
-  static List<Product> get featured =>
-      products.where((Product p) => p.isFeatured).toList(growable: false);
+  static final List<Product> featured = List<Product>.unmodifiable(
+    products.where((Product p) => p.isFeatured),
+  );
 
   static Product? byId(String id) {
     for (final Product product in products) {

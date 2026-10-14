@@ -6,6 +6,7 @@ import '../models/product.dart';
 import '../navigation/app_routes.dart';
 import '../state/shop_state.dart';
 import '../theme/app_colors.dart';
+import '../widgets/circle_icon_button.dart';
 import '../widgets/network_product_image.dart';
 import '../widgets/price_text.dart';
 import '../widgets/product_card.dart';
@@ -114,8 +115,12 @@ class _ImageAppBar extends StatelessWidget {
       surfaceTintColor: Colors.transparent,
       leading: Padding(
         padding: const EdgeInsets.all(10),
-        child: _GlassCircle(
+        child: CircleIconButton(
           icon: Icons.arrow_back_rounded,
+          size: 44,
+          iconSize: 22,
+          background: Colors.white,
+          elevated: true,
           onTap: () => Navigator.of(context).pop(),
         ),
       ),
@@ -145,35 +150,6 @@ class _ImageAppBar extends StatelessWidget {
             height: 420,
             fit: BoxFit.cover,
           ),
-        ),
-      ),
-    );
-  }
-}
-
-class _GlassCircle extends StatelessWidget {
-  const _GlassCircle({required this.icon, required this.onTap});
-
-  final IconData icon;
-  final VoidCallback onTap;
-
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      width: 44,
-      height: 44,
-      decoration: BoxDecoration(
-        color: Colors.white,
-        shape: BoxShape.circle,
-        boxShadow: AppColors.softShadow,
-      ),
-      child: Material(
-        color: Colors.transparent,
-        shape: const CircleBorder(),
-        child: InkWell(
-          customBorder: const CircleBorder(),
-          onTap: onTap,
-          child: Icon(icon, color: AppColors.textPrimary, size: 22),
         ),
       ),
     );
@@ -558,6 +534,7 @@ class _RelatedProducts extends StatelessWidget {
                   child: SizedBox(
                     width: 190,
                     child: Reveal(
+                      key: ValueKey<String>(p.id),
                       delay: Duration(milliseconds: 50 * index),
                       child: ProductCard(
                         product: p,

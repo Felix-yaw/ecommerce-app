@@ -112,6 +112,7 @@ class _CartBody extends StatelessWidget {
             itemBuilder: (BuildContext context, int index) {
               final CartItem item = items[index];
               return Reveal(
+                key: ValueKey<String>(item.variantKey),
                 delay: Duration(milliseconds: 45 * index),
                 child: CartLineTile(
                   item: item,

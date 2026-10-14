@@ -15,17 +15,19 @@ import '../widgets/reveal.dart';
 import '../widgets/section_header.dart';
 
 /// The discovery/home tab — a luxury, editorial storefront feed.
+///
+/// This widget deliberately does **not** watch [ShopState]; each sub-section
+/// subscribes to just the slice it needs via `context.select`, so a cart or
+/// wishlist mutation never rebuilds the carousel, rails or the whole page.
 class HomeScreen extends StatelessWidget {
   const HomeScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
-    final ShopState shop = context.watch<ShopState>();
-
     return Scaffold(
       body: CustomScrollView(
         slivers: <Widget>[
-          _HomeAppBar(shop: shop),
+          const _HomeAppBar(),
           const SliverToBoxAdapter(child: SizedBox(height: 16)),
           const SliverToBoxAdapter(child: PromoCarousel()),
           const SliverToBoxAdapter(child: SizedBox(height: 26)),
@@ -39,7 +41,7 @@ class HomeScreen extends StatelessWidget {
             ),
           ),
           const SliverToBoxAdapter(child: SizedBox(height: 14)),
-          SliverToBoxAdapter(child: _CategoryBar(shop: shop)),
+          const SliverToBoxAdapter(child: _CategoryBar()),
           const SliverToBoxAdapter(child: SizedBox(height: 28)),
           SliverToBoxAdapter(
             child: Padding(
@@ -65,7 +67,7 @@ class HomeScreen extends StatelessWidget {
             ),
           ),
           const SliverToBoxAdapter(child: SizedBox(height: 16)),
-          _PopularGrid(shop: shop),
+          const _PopularGrid(),
           const SliverToBoxAdapter(child: SizedBox(height: 120)),
         ],
       ),
@@ -74,12 +76,14 @@ class HomeScreen extends StatelessWidget {
 }
 
 class _HomeAppBar extends StatelessWidget {
-  const _HomeAppBar({required this.shop});
-
-  final ShopState shop;
+  const _HomeAppBar();
 
   @override
   Widget build(BuildContext context) {
+    final int cartCount = context.select<ShopState, int>(
+      (ShopState s) => s.cartCount,
+    );
+
     return SliverAppBar(
       pinned: true,
       floating: true,
@@ -144,7 +148,7 @@ class _HomeAppBar extends StatelessWidget {
       actions: <Widget>[
         BadgedIconButton(
           icon: Icons.shopping_bag_outlined,
-          count: shop.cartCount,
+          count: cartCount,
           tooltip: 'Cart',
           onTap: () => AppRoutes.openCart(context),
         ),
@@ -202,12 +206,14 @@ class _HomeAppBar extends StatelessWidget {
 }
 
 class _CategoryBar extends StatelessWidget {
-  const _CategoryBar({required this.shop});
-
-  final ShopState shop;
+  const _CategoryBar();
 
   @override
   Widget build(BuildContext context) {
+    final String selectedId = context.select<ShopState, String>(
+      (ShopState s) => s.selectedCategoryId,
+    );
+
     return SizedBox(
       height: 46,
       child: ListView.builder(
@@ -220,8 +226,9 @@ class _CategoryBar extends StatelessWidget {
             padding: const EdgeInsets.only(right: 10),
             child: CategoryChip(
               category: category,
-              selected: shop.selectedCategoryId == category.id,
-              onTap: () => shop.selectCategory(category.id),
+              selected: selectedId == category.id,
+              onTap: () =>
+                  context.read<ShopState>().selectCategory(category.id),
             ),
           );
         },
@@ -249,6 +256,7 @@ class _FeaturedRail extends StatelessWidget {
             child: SizedBox(
               width: 190,
               child: Reveal(
+                key: ValueKey<String>(product.id),
                 delay: Duration(milliseconds: 60 * index),
                 child: ProductCard(
                   product: product,
@@ -264,13 +272,14 @@ class _FeaturedRail extends StatelessWidget {
 }
 
 class _PopularGrid extends StatelessWidget {
-  const _PopularGrid({required this.shop});
-
-  final ShopState shop;
+  const _PopularGrid();
 
   @override
   Widget build(BuildContext context) {
-    final List<Product> products = shop.filteredProducts;
+    // Stable list instance → rebuilds only when the category changes.
+    final List<Product> products = context.select<ShopState, List<Product>>(
+      (ShopState s) => s.filteredProducts,
+    );
 
     return SliverPadding(
       padding: const EdgeInsets.symmetric(horizontal: 20),
@@ -285,6 +294,7 @@ class _PopularGrid extends StatelessWidget {
         itemBuilder: (BuildContext context, int index) {
           final Product product = products[index];
           return Reveal(
+            key: ValueKey<String>(product.id),
             delay: Duration(milliseconds: 40 * (index % 6)),
             child: ProductCard(
               product: product,

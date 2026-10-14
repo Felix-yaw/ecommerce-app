@@ -57,9 +57,9 @@ class _WishlistButtonState extends State<WishlistButton>
     super.dispose();
   }
 
-  void _onTap(ShopState shop, bool active) {
+  void _onTap(bool active) {
     _controller.forward(from: 0.0);
-    shop.toggleWishlist(widget.product);
+    context.read<ShopState>().toggleWishlist(widget.product);
     ScaffoldMessenger.of(context)
       ..hideCurrentSnackBar()
       ..showSnackBar(
@@ -76,8 +76,9 @@ class _WishlistButtonState extends State<WishlistButton>
 
   @override
   Widget build(BuildContext context) {
-    final ShopState shop = context.watch<ShopState>();
-    final bool active = shop.isWishlisted(widget.product);
+    final bool active = context.select<ShopState, bool>(
+      (ShopState s) => s.isWishlisted(widget.product),
+    );
     final Color bgColor = widget.background ??
         (active ? AppColors.accentLight : AppColors.surface.withValues(alpha: 0.9));
 
@@ -102,7 +103,7 @@ class _WishlistButtonState extends State<WishlistButton>
           shape: const CircleBorder(),
           child: InkWell(
             customBorder: const CircleBorder(),
-            onTap: () => _onTap(shop, active),
+            onTap: () => _onTap(active),
             child: Center(
               child: Icon(
                 active ? Icons.favorite_rounded : Icons.favorite_border_rounded,

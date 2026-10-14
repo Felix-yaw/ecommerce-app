@@ -10,7 +10,10 @@ class ProfileScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final ShopState shop = context.watch<ShopState>();
+    final (int wishlistCount, int cartCount) = context
+        .select<ShopState, (int, int)>(
+          (ShopState s) => (s.wishlistCount, s.cartCount),
+        );
 
     return Scaffold(
       appBar: AppBar(
@@ -29,7 +32,7 @@ class ProfileScreen extends StatelessWidget {
         children: <Widget>[
           const _MemberCard(),
           const SizedBox(height: 24),
-          _StatsRow(shop: shop),
+          _StatsRow(wishlistCount: wishlistCount, cartCount: cartCount),
           const SizedBox(height: 26),
           const _MenuGroup(
             items: <_MenuItem>[
@@ -223,9 +226,10 @@ class _MemberCard extends StatelessWidget {
 }
 
 class _StatsRow extends StatelessWidget {
-  const _StatsRow({required this.shop});
+  const _StatsRow({required this.wishlistCount, required this.cartCount});
 
-  final ShopState shop;
+  final int wishlistCount;
+  final int cartCount;
 
   @override
   Widget build(BuildContext context) {
@@ -241,9 +245,9 @@ class _StatsRow extends StatelessWidget {
         children: <Widget>[
           _StatItem(value: '12', label: 'Orders'),
           const _StatDivider(),
-          _StatItem(value: '${shop.wishlistCount}', label: 'Saved'),
+          _StatItem(value: '$wishlistCount', label: 'Saved'),
           const _StatDivider(),
-          _StatItem(value: '${shop.cartCount}', label: 'In bag'),
+          _StatItem(value: '$cartCount', label: 'In bag'),
         ],
       ),
     );

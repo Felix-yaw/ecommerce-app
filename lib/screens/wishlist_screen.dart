@@ -5,11 +5,14 @@ import '../models/product.dart';
 import '../navigation/app_routes.dart';
 import '../state/shop_state.dart';
 import '../theme/app_colors.dart';
+import '../widgets/circle_icon_button.dart';
 import '../widgets/empty_state.dart';
 import '../widgets/product_card.dart';
 import '../widgets/reveal.dart';
 
 /// Saved products tab with elegant list cards.
+///
+/// Subscribes only to the wishlist slice so cart changes do not rebuild it.
 class WishlistScreen extends StatelessWidget {
   const WishlistScreen({super.key, this.onBrowse});
 
@@ -17,14 +20,13 @@ class WishlistScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final ShopState shop = context.watch<ShopState>();
-    final List<Product> products = shop.wishlistProducts;
+    final List<Product> products = context.select<ShopState, List<Product>>(
+      (ShopState s) => s.wishlistProducts,
+    );
 
     return Scaffold(
       appBar: AppBar(
-        title: Text(
-          'Saved${products.isEmpty ? '' : ' (${products.length})'}',
-        ),
+        title: Text('Saved${products.isEmpty ? '' : ' (${products.length})'}'),
       ),
       body: products.isEmpty
           ? EmptyState(
@@ -42,6 +44,7 @@ class WishlistScreen extends StatelessWidget {
               itemBuilder: (BuildContext context, int index) {
                 final Product product = products[index];
                 return Reveal(
+                  key: ValueKey<String>(product.id),
                   delay: Duration(milliseconds: 45 * index),
                   child: ProductListCard(
                     product: product,
@@ -49,20 +52,22 @@ class WishlistScreen extends StatelessWidget {
                     trailing: Column(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: <Widget>[
-                        _CircleIconButton(
+                        CircleIconButton(
                           icon: Icons.favorite_rounded,
                           color: AppColors.accent,
                           background: AppColors.accentLight,
                           tooltip: 'Remove',
-                          onTap: () => shop.toggleWishlist(product),
+                          onTap: () => context
+                              .read<ShopState>()
+                              .toggleWishlist(product),
                         ),
                         const SizedBox(height: 8),
-                        _CircleIconButton(
+                        CircleIconButton(
                           icon: Icons.add_shopping_cart_rounded,
                           color: Colors.white,
                           background: AppColors.primary,
                           tooltip: 'Add to bag',
-                          onTap: () => _addToCart(context, shop, product),
+                          onTap: () => _addToCart(context, product),
                         ),
                       ],
                     ),
@@ -73,48 +78,12 @@ class WishlistScreen extends StatelessWidget {
     );
   }
 
-  void _addToCart(BuildContext context, ShopState shop, Product product) {
-    shop.addToCart(product);
+  void _addToCart(BuildContext context, Product product) {
+    context.read<ShopState>().addToCart(product);
     ScaffoldMessenger.of(context)
       ..hideCurrentSnackBar()
       ..showSnackBar(
         SnackBar(content: Text('${product.name} added to bag')),
       );
-  }
-}
-
-class _CircleIconButton extends StatelessWidget {
-  const _CircleIconButton({
-    required this.icon,
-    required this.color,
-    required this.background,
-    required this.onTap,
-    this.tooltip,
-  });
-
-  final IconData icon;
-  final Color color;
-  final Color background;
-  final VoidCallback onTap;
-  final String? tooltip;
-
-  @override
-  Widget build(BuildContext context) {
-    return Tooltip(
-      message: tooltip ?? '',
-      child: Material(
-        color: background,
-        shape: const CircleBorder(),
-        child: InkWell(
-          customBorder: const CircleBorder(),
-          onTap: onTap,
-          child: SizedBox(
-            width: 42,
-            height: 42,
-            child: Icon(icon, size: 19, color: color),
-          ),
-        ),
-      ),
-    );
   }
 }

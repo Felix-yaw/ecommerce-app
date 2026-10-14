@@ -57,8 +57,14 @@ This prototype deliberately follows the Flutter performance playbook:
 
 - `const` constructors used throughout for immutable widgets.
 - Large `build()` methods decomposed into small focused widgets.
+- Fine-grained rebuilds: widgets subscribe with
+  `context.select<ShopState, T>` to just the slice they need, so a cart or
+  wishlist change never rebuilds the home feed, rails or nav.
+- `ShopState` caches derived data (filtered products, wishlist list, cart
+  totals) and returns stable instances, so repeated reads in a build are cheap.
 - All long/unknown lists use `ListView.builder` / `GridView.builder` /
   `SliverGrid.builder` and only build the cells on screen.
+- List items carry `ValueKey`s so animated children keep stable identities.
 - Images decode with `cacheWidth` / `cacheHeight` so full-resolution bitmaps are
   never held in memory.
 - Non-UI work stays out of `build()`; controllers, timers and `PageController`s

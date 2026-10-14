@@ -83,6 +83,30 @@ void main() {
         isTrue,
       );
     });
+
+    test('filteredProducts returns a stable instance until category changes', () {
+      final ShopState shop = ShopState();
+
+      final List<Product> first = shop.filteredProducts;
+      expect(identical(first, shop.filteredProducts), isTrue);
+
+      shop.selectCategory('electronics');
+      expect(identical(shop.filteredProducts, first), isFalse);
+      expect(
+        shop.filteredProducts.every(
+          (Product p) => p.categoryId == 'electronics',
+        ),
+        isTrue,
+      );
+    });
+
+    test('catalogue is unmodifiable', () {
+      final ShopState shop = ShopState();
+      expect(
+        () => shop.catalogue.add(shop.catalogue.first),
+        throwsUnsupportedError,
+      );
+    });
   });
 
   testWidgets('home screen renders shell and catalog', (

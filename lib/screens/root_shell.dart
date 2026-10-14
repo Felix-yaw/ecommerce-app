@@ -11,7 +11,11 @@ import 'profile_screen.dart';
 import 'wishlist_screen.dart';
 
 /// Root scaffold hosting the four primary tabs behind a floating,
-/// frosted-glass navigation bar with a fluid expanding pill indicator.
+/// frosted-glass navigation bar.
+///
+/// The shell itself does not watch [ShopState]; only the nav bar subscribes to
+/// the two counts it displays, and only the tab widgets subscribe to their own
+/// slices.
 class RootShell extends StatefulWidget {
   const RootShell({super.key});
 
@@ -29,8 +33,6 @@ class _RootShellState extends State<RootShell> {
 
   @override
   Widget build(BuildContext context) {
-    final ShopState shop = context.read<ShopState>();
-
     final List<Widget> tabs = <Widget>[
       const HomeScreen(),
       WishlistScreen(onBrowse: () => _onSelect(0)),
@@ -41,36 +43,27 @@ class _RootShellState extends State<RootShell> {
     return Scaffold(
       extendBody: true,
       body: IndexedStack(index: _index, children: tabs),
-      bottomNavigationBar: ListenableBuilder(
-        listenable: shop,
-        builder: (BuildContext context, Widget? _) {
-          return _FloatingNavBar(
-            index: _index,
-            wishlistCount: shop.wishlistCount,
-            cartCount: shop.cartCount,
-            onSelect: _onSelect,
-          );
-        },
+      bottomNavigationBar: _FloatingNavBar(
+        index: _index,
+        onSelect: _onSelect,
       ),
     );
   }
 }
 
 class _FloatingNavBar extends StatelessWidget {
-  const _FloatingNavBar({
-    required this.index,
-    required this.wishlistCount,
-    required this.cartCount,
-    required this.onSelect,
-  });
+  const _FloatingNavBar({required this.index, required this.onSelect});
 
   final int index;
-  final int wishlistCount;
-  final int cartCount;
   final ValueChanged<int> onSelect;
 
   @override
   Widget build(BuildContext context) {
+    final (int wishlistCount, int cartCount) = context
+        .select<ShopState, (int, int)>(
+          (ShopState s) => (s.wishlistCount, s.cartCount),
+        );
+
     return Padding(
       padding: const EdgeInsets.fromLTRB(18, 0, 18, 18),
       child: ClipRRect(
