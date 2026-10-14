@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 
 import '../theme/app_colors.dart';
 
-/// Horizontal +/- control used on the cart and product detail screens.
+/// Sleek pill-shaped quantity stepper with circular controls.
 class QuantityStepper extends StatelessWidget {
   const QuantityStepper({
     super.key,
@@ -19,14 +19,14 @@ class QuantityStepper extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final double dimension = compact ? 30 : 38;
+    final double dimension = compact ? 32 : 42;
 
     return Container(
       decoration: BoxDecoration(
-        color: AppColors.surfaceMuted,
-        borderRadius: BorderRadius.circular(12),
+        color: AppColors.surfaceSecondary,
+        borderRadius: BorderRadius.circular(100),
       ),
-      padding: const EdgeInsets.all(3),
+      padding: const EdgeInsets.all(4),
       child: Row(
         mainAxisSize: MainAxisSize.min,
         children: <Widget>[
@@ -36,13 +36,13 @@ class QuantityStepper extends StatelessWidget {
             onTap: onDecrement,
           ),
           SizedBox(
-            width: compact ? 34 : 42,
+            width: compact ? 36 : 46,
             child: Center(
               child: Text(
                 '$quantity',
                 style: TextStyle(
-                  fontSize: compact ? 14 : 16,
-                  fontWeight: FontWeight.w700,
+                  fontSize: compact ? 14 : 17,
+                  fontWeight: FontWeight.w900,
                   color: AppColors.textPrimary,
                 ),
               ),
@@ -52,6 +52,7 @@ class QuantityStepper extends StatelessWidget {
             icon: Icons.add_rounded,
             dimension: dimension,
             onTap: onIncrement,
+            filled: true,
           ),
         ],
       ),
@@ -64,24 +65,30 @@ class _StepButton extends StatelessWidget {
     required this.icon,
     required this.dimension,
     required this.onTap,
+    this.filled = false,
   });
 
   final IconData icon;
   final double dimension;
   final VoidCallback onTap;
+  final bool filled;
 
   @override
   Widget build(BuildContext context) {
     return Material(
-      color: AppColors.surface,
-      borderRadius: BorderRadius.circular(9),
+      color: filled ? AppColors.primary : AppColors.surface,
+      shape: const CircleBorder(),
       child: InkWell(
-        borderRadius: BorderRadius.circular(9),
+        customBorder: const CircleBorder(),
         onTap: onTap,
         child: SizedBox(
           width: dimension,
           height: dimension,
-          child: Icon(icon, size: 18, color: AppColors.textPrimary),
+          child: Icon(
+            icon,
+            size: 18,
+            color: filled ? Colors.white : AppColors.textPrimary,
+          ),
         ),
       ),
     );

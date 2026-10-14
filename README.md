@@ -20,6 +20,18 @@ data so the app boots instantly on any platform.
   order-placed confirmation.
 - **Profile** — member summary, live order/wishlist/cart stats and settings.
 
+## Design system
+
+A modern, Dribbble-inspired visual language:
+
+- Rich editorial typography (heavy weights, tight tracking) on an obsidian +
+  off-white palette with electric sunset and indigo accents.
+- Floating, frosted-glass bottom navigation with a fluid expanding pill.
+- Soft-lift card shadows, generous corner radii and glass tags.
+- Motion: staggered `Reveal` entrance animations, spring wishlist hearts,
+  auto-advancing hero carousel, animated variant swatches and an animated
+  order-confirmation dialog.
+
 ## Architecture
 
 ```

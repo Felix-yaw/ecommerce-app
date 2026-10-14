@@ -8,6 +8,7 @@ import '../state/shop_scope.dart';
 import '../state/shop_state.dart';
 import '../theme/app_colors.dart';
 import '../widgets/product_card.dart';
+import '../widgets/reveal.dart';
 
 /// "See all" screen listing every product within a category, with sorting.
 class CategoryProductsScreen extends StatefulWidget {
@@ -71,7 +72,10 @@ class _CategoryProductsScreenState extends State<CategoryProductsScreen> {
           PopupMenuButton<String>(
             initialValue: _sort,
             tooltip: 'Sort',
-            icon: const Icon(Icons.sort_rounded),
+            icon: const Icon(Icons.tune_rounded),
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(18),
+            ),
             onSelected: (String value) => setState(() => _sort = value),
             itemBuilder: (BuildContext context) => _sortLabels.entries
                 .map(
@@ -82,6 +86,7 @@ class _CategoryProductsScreenState extends State<CategoryProductsScreen> {
                 )
                 .toList(),
           ),
+          const SizedBox(width: 8),
         ],
       ),
       body: Column(
@@ -90,11 +95,22 @@ class _CategoryProductsScreenState extends State<CategoryProductsScreen> {
             padding: const EdgeInsets.fromLTRB(20, 4, 20, 12),
             child: Row(
               children: <Widget>[
-                Text(
-                  '${products.length} products',
-                  style: const TextStyle(
-                    fontSize: 13,
-                    color: AppColors.textSecondary,
+                Container(
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: 12,
+                    vertical: 6,
+                  ),
+                  decoration: BoxDecoration(
+                    color: AppColors.primary,
+                    borderRadius: BorderRadius.circular(20),
+                  ),
+                  child: Text(
+                    '${products.length} items',
+                    style: const TextStyle(
+                      fontSize: 12,
+                      fontWeight: FontWeight.w800,
+                      color: Colors.white,
+                    ),
                   ),
                 ),
                 const Spacer(),
@@ -102,8 +118,8 @@ class _CategoryProductsScreenState extends State<CategoryProductsScreen> {
                   _sortLabels[_sort]!,
                   style: const TextStyle(
                     fontSize: 13,
-                    fontWeight: FontWeight.w600,
-                    color: AppColors.primary,
+                    fontWeight: FontWeight.w700,
+                    color: AppColors.textSecondary,
                   ),
                 ),
               ],
@@ -111,7 +127,7 @@ class _CategoryProductsScreenState extends State<CategoryProductsScreen> {
           ),
           Expanded(
             child: GridView.builder(
-              padding: const EdgeInsets.fromLTRB(20, 0, 20, 24),
+              padding: const EdgeInsets.fromLTRB(20, 4, 20, 24),
               gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
                 crossAxisCount: 2,
                 mainAxisSpacing: 16,
@@ -121,9 +137,12 @@ class _CategoryProductsScreenState extends State<CategoryProductsScreen> {
               itemCount: products.length,
               itemBuilder: (BuildContext context, int index) {
                 final Product product = products[index];
-                return ProductCard(
-                  product: product,
-                  onTap: () => AppRoutes.openProduct(context, product),
+                return Reveal(
+                  delay: Duration(milliseconds: 40 * (index % 6)),
+                  child: ProductCard(
+                    product: product,
+                    onTap: () => AppRoutes.openProduct(context, product),
+                  ),
                 );
               },
             ),

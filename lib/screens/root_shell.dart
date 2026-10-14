@@ -1,3 +1,5 @@
+import 'dart:ui';
+
 import 'package:flutter/material.dart';
 
 import '../state/shop_scope.dart';
@@ -8,11 +10,8 @@ import 'home_screen.dart';
 import 'profile_screen.dart';
 import 'wishlist_screen.dart';
 
-/// Root scaffold that hosts the four primary tabs.
-///
-/// An [IndexedStack] keeps each tab's state alive while only the selected tab
-/// is painted. The bar itself subscribes to [ShopState] through a
-/// [ListenableBuilder] so cart/wishlist badge changes never rebuild the tabs.
+/// Root scaffold hosting the four primary tabs behind a floating,
+/// frosted-glass navigation bar with a fluid expanding pill indicator.
 class RootShell extends StatefulWidget {
   const RootShell({super.key});
 
@@ -40,57 +39,87 @@ class _RootShellState extends State<RootShell> {
     ];
 
     return Scaffold(
+      extendBody: true,
       body: IndexedStack(index: _index, children: tabs),
-      bottomNavigationBar: DecoratedBox(
-        decoration: const BoxDecoration(
-          color: AppColors.surface,
-          boxShadow: <BoxShadow>[
-            BoxShadow(
-              color: AppColors.shadow,
-              blurRadius: 18,
-              offset: Offset(0, -4),
+      bottomNavigationBar: ListenableBuilder(
+        listenable: shop,
+        builder: (BuildContext context, Widget? _) {
+          return _FloatingNavBar(
+            index: _index,
+            wishlistCount: shop.wishlistCount,
+            cartCount: shop.cartCount,
+            onSelect: _onSelect,
+          );
+        },
+      ),
+    );
+  }
+}
+
+class _FloatingNavBar extends StatelessWidget {
+  const _FloatingNavBar({
+    required this.index,
+    required this.wishlistCount,
+    required this.cartCount,
+    required this.onSelect,
+  });
+
+  final int index;
+  final int wishlistCount;
+  final int cartCount;
+  final ValueChanged<int> onSelect;
+
+  @override
+  Widget build(BuildContext context) {
+    return Padding(
+      padding: const EdgeInsets.fromLTRB(18, 0, 18, 18),
+      child: ClipRRect(
+        borderRadius: BorderRadius.circular(30),
+        child: BackdropFilter(
+          filter: ImageFilter.blur(sigmaX: 20, sigmaY: 20),
+          child: Container(
+            decoration: BoxDecoration(
+              color: AppColors.glassWhite,
+              borderRadius: BorderRadius.circular(30),
+              border: Border.all(color: Colors.white.withValues(alpha: 0.6)),
+              boxShadow: AppColors.floatingShadow,
             ),
-          ],
-        ),
-        child: SafeArea(
-          top: false,
-          child: ListenableBuilder(
-            listenable: shop,
-            builder: (BuildContext context, Widget? _) {
-              return NavigationBar(
-                selectedIndex: _index,
-                onDestinationSelected: _onSelect,
-                height: 66,
-                backgroundColor: AppColors.surface,
-                indicatorColor: AppColors.primaryLight,
-                labelBehavior: NavigationDestinationLabelBehavior.alwaysShow,
-                destinations: <Widget>[
-                  const NavigationDestination(
-                    icon: Icon(Icons.home_outlined),
-                    selectedIcon: Icon(Icons.home_rounded),
-                    label: 'Home',
-                  ),
-                  NavigationDestination(
-                    icon: _WishlistNavIcon(count: shop.wishlistCount),
-                    selectedIcon: _WishlistNavIcon(
-                      count: shop.wishlistCount,
-                      filled: true,
-                    ),
-                    label: 'Wishlist',
-                  ),
-                  NavigationDestination(
-                    icon: _CartNavIcon(count: shop.cartCount),
-                    selectedIcon: _CartNavIcon(count: shop.cartCount),
-                    label: 'Cart',
-                  ),
-                  const NavigationDestination(
-                    icon: Icon(Icons.person_outline_rounded),
-                    selectedIcon: Icon(Icons.person_rounded),
-                    label: 'Profile',
-                  ),
-                ],
-              );
-            },
+            padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 6),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+              children: <Widget>[
+                _NavItem(
+                  icon: Icons.home_outlined,
+                  selectedIcon: Icons.home_rounded,
+                  label: 'Home',
+                  selected: index == 0,
+                  onTap: () => onSelect(0),
+                ),
+                _NavItem(
+                  icon: Icons.favorite_border_rounded,
+                  selectedIcon: Icons.favorite_rounded,
+                  label: 'Saved',
+                  badge: wishlistCount,
+                  selected: index == 1,
+                  onTap: () => onSelect(1),
+                ),
+                _NavItem(
+                  icon: Icons.shopping_bag_outlined,
+                  selectedIcon: Icons.shopping_bag_rounded,
+                  label: 'Bag',
+                  badge: cartCount,
+                  selected: index == 2,
+                  onTap: () => onSelect(2),
+                ),
+                _NavItem(
+                  icon: Icons.person_outline_rounded,
+                  selectedIcon: Icons.person_rounded,
+                  label: 'Profile',
+                  selected: index == 3,
+                  onTap: () => onSelect(3),
+                ),
+              ],
+            ),
           ),
         ),
       ),
@@ -98,36 +127,104 @@ class _RootShellState extends State<RootShell> {
   }
 }
 
-class _CartNavIcon extends StatelessWidget {
-  const _CartNavIcon({required this.count});
+class _NavItem extends StatelessWidget {
+  const _NavItem({
+    required this.icon,
+    required this.selectedIcon,
+    required this.label,
+    required this.selected,
+    required this.onTap,
+    this.badge = 0,
+  });
 
-  final int count;
-
-  @override
-  Widget build(BuildContext context) {
-    return Badge(
-      isLabelVisible: count > 0,
-      label: Text('$count'),
-      backgroundColor: AppColors.accent,
-      child: const Icon(Icons.shopping_bag_outlined),
-    );
-  }
-}
-
-class _WishlistNavIcon extends StatelessWidget {
-  const _WishlistNavIcon({required this.count, this.filled = false});
-
-  final int count;
-  final bool filled;
+  final IconData icon;
+  final IconData selectedIcon;
+  final String label;
+  final bool selected;
+  final VoidCallback onTap;
+  final int badge;
 
   @override
   Widget build(BuildContext context) {
-    return Badge(
-      isLabelVisible: count > 0,
-      label: Text('$count'),
-      backgroundColor: AppColors.accent,
-      child: Icon(
-        filled ? Icons.favorite_rounded : Icons.favorite_border_rounded,
+    return GestureDetector(
+      onTap: onTap,
+      behavior: HitTestBehavior.opaque,
+      child: AnimatedContainer(
+        duration: const Duration(milliseconds: 320),
+        curve: Curves.easeOutCubic,
+        padding: EdgeInsets.symmetric(
+          horizontal: selected ? 18 : 14,
+          vertical: 12,
+        ),
+        decoration: BoxDecoration(
+          color: selected ? AppColors.primary : Colors.transparent,
+          borderRadius: BorderRadius.circular(24),
+          boxShadow: selected ? AppColors.glowPrimary : null,
+        ),
+        child: Row(
+          mainAxisSize: MainAxisSize.min,
+          children: <Widget>[
+            Stack(
+              clipBehavior: Clip.none,
+              children: <Widget>[
+                Icon(
+                  selected ? selectedIcon : icon,
+                  size: 22,
+                  color: selected ? Colors.white : AppColors.textSecondary,
+                ),
+                if (badge > 0)
+                  Positioned(
+                    right: -6,
+                    top: -4,
+                    child: Container(
+                      padding: const EdgeInsets.symmetric(
+                        horizontal: 4,
+                        vertical: 1,
+                      ),
+                      constraints: const BoxConstraints(minWidth: 16),
+                      decoration: BoxDecoration(
+                        color: AppColors.accent,
+                        borderRadius: BorderRadius.circular(8),
+                        border: Border.all(
+                          color: selected
+                              ? AppColors.primary
+                              : AppColors.surface,
+                          width: 1.5,
+                        ),
+                      ),
+                      child: Text(
+                        badge > 9 ? '9+' : '$badge',
+                        textAlign: TextAlign.center,
+                        style: const TextStyle(
+                          color: Colors.white,
+                          fontSize: 9,
+                          fontWeight: FontWeight.w800,
+                        ),
+                      ),
+                    ),
+                  ),
+              ],
+            ),
+            AnimatedSize(
+              duration: const Duration(milliseconds: 320),
+              curve: Curves.easeOutCubic,
+              child: selected
+                  ? Padding(
+                      padding: const EdgeInsets.only(left: 8),
+                      child: Text(
+                        label,
+                        style: const TextStyle(
+                          color: Colors.white,
+                          fontSize: 13,
+                          fontWeight: FontWeight.w800,
+                          letterSpacing: -0.2,
+                        ),
+                      ),
+                    )
+                  : const SizedBox.shrink(),
+            ),
+          ],
+        ),
       ),
     );
   }

@@ -3,8 +3,7 @@ import 'package:flutter/material.dart';
 import '../models/product.dart';
 import '../theme/app_colors.dart';
 
-/// Price row showing the current price plus a struck-through original price
-/// and discount badge when the product is on sale.
+/// Price row with editorial typography and an optional sale treatment.
 class PriceText extends StatelessWidget {
   const PriceText({
     super.key,
@@ -28,34 +27,37 @@ class PriceText extends StatelessWidget {
           product.displayPrice,
           style: TextStyle(
             fontSize: priceSize,
-            fontWeight: FontWeight.w800,
-            color: AppColors.primary,
+            fontWeight: FontWeight.w900,
+            letterSpacing: -0.6,
+            color: AppColors.textPrimary,
           ),
         ),
         if (product.hasDiscount) ...<Widget>[
-          const SizedBox(width: 6),
+          const SizedBox(width: 7),
           Text(
             product.displayOldPrice,
             style: TextStyle(
-              fontSize: priceSize - 3,
-              color: AppColors.textSecondary,
+              fontSize: priceSize - 4,
+              fontWeight: FontWeight.w500,
+              color: AppColors.textTertiary,
               decoration: TextDecoration.lineThrough,
+              decorationColor: AppColors.textTertiary,
             ),
           ),
         ],
         if (showDiscountBadge && product.hasDiscount) ...<Widget>[
-          const SizedBox(width: 8),
+          const SizedBox(width: 10),
           Container(
-            padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
+            padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 3),
             decoration: BoxDecoration(
               color: AppColors.accentLight,
-              borderRadius: BorderRadius.circular(6),
+              borderRadius: BorderRadius.circular(20),
             ),
             child: Text(
-              '-${product.discountPercent}%',
+              'Save ${product.discountPercent}%',
               style: const TextStyle(
                 fontSize: 10,
-                fontWeight: FontWeight.w700,
+                fontWeight: FontWeight.w800,
                 color: AppColors.accent,
               ),
             ),

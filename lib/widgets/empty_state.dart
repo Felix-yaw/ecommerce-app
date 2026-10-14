@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 
 import '../theme/app_colors.dart';
 
-/// Friendly empty/placeholder state reused across the app.
+/// Modern empty/placeholder state with a soft gradient blob.
 class EmptyState extends StatelessWidget {
   const EmptyState({
     super.key,
@@ -23,43 +23,59 @@ class EmptyState extends StatelessWidget {
   Widget build(BuildContext context) {
     return Center(
       child: Padding(
-        padding: const EdgeInsets.all(32),
+        padding: const EdgeInsets.all(36),
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: <Widget>[
             Container(
-              width: 96,
-              height: 96,
+              width: 108,
+              height: 108,
               decoration: const BoxDecoration(
-                color: AppColors.primaryLight,
                 shape: BoxShape.circle,
+                gradient: LinearGradient(
+                  begin: Alignment.topLeft,
+                  end: Alignment.bottomRight,
+                  colors: <Color>[AppColors.surfaceSecondary, AppColors.primaryLight],
+                ),
               ),
-              child: Icon(icon, size: 44, color: AppColors.primary),
+              child: Center(
+                child: Container(
+                  width: 68,
+                  height: 68,
+                  decoration: const BoxDecoration(
+                    color: AppColors.primary,
+                    shape: BoxShape.circle,
+                    boxShadow: AppColors.glowPrimary,
+                  ),
+                  child: Icon(icon, size: 32, color: Colors.white),
+                ),
+              ),
             ),
-            const SizedBox(height: 22),
+            const SizedBox(height: 26),
             Text(
               title,
               textAlign: TextAlign.center,
               style: const TextStyle(
-                fontSize: 19,
-                fontWeight: FontWeight.w700,
+                fontSize: 21,
+                fontWeight: FontWeight.w900,
+                letterSpacing: -0.5,
                 color: AppColors.textPrimary,
               ),
             ),
-            const SizedBox(height: 8),
+            const SizedBox(height: 10),
             Text(
               message,
               textAlign: TextAlign.center,
               style: const TextStyle(
                 fontSize: 14,
-                height: 1.4,
+                height: 1.5,
                 color: AppColors.textSecondary,
               ),
             ),
             if (actionLabel != null && onAction != null) ...<Widget>[
-              const SizedBox(height: 22),
+              const SizedBox(height: 26),
               SizedBox(
-                width: 200,
+                width: 220,
                 child: FilledButton(
                   onPressed: onAction,
                   child: Text(actionLabel!),

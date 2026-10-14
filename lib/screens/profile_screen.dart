@@ -4,7 +4,7 @@ import '../state/shop_scope.dart';
 import '../state/shop_state.dart';
 import '../theme/app_colors.dart';
 
-/// Account tab with a lightweight profile summary and settings list.
+/// Account tab with a premium membership card and settings list.
 class ProfileScreen extends StatelessWidget {
   const ProfileScreen({super.key});
 
@@ -21,16 +21,16 @@ class ProfileScreen extends StatelessWidget {
             onPressed: () => _notImplemented(context, 'Settings'),
             icon: const Icon(Icons.settings_outlined),
           ),
-          const SizedBox(width: 8),
+          const SizedBox(width: 12),
         ],
       ),
       body: ListView(
-        padding: const EdgeInsets.fromLTRB(20, 8, 20, 32),
+        padding: const EdgeInsets.fromLTRB(20, 4, 20, 130),
         children: <Widget>[
-          const _ProfileHeader(),
-          const SizedBox(height: 20),
-          _StatsCard(shop: shop),
+          const _MemberCard(),
           const SizedBox(height: 24),
+          _StatsRow(shop: shop),
+          const SizedBox(height: 26),
           const _MenuGroup(
             items: <_MenuItem>[
               _MenuItem(Icons.receipt_long_outlined, 'My Orders',
@@ -52,21 +52,25 @@ class ProfileScreen extends StatelessWidget {
                   'FAQs and support'),
             ],
           ),
-          const SizedBox(height: 24),
+          const SizedBox(height: 26),
           OutlinedButton.icon(
             onPressed: () => _notImplemented(context, 'Log out'),
             icon: const Icon(Icons.logout_rounded),
             label: const Text('Log out'),
             style: OutlinedButton.styleFrom(
               foregroundColor: AppColors.accent,
-              side: const BorderSide(color: AppColors.accent),
+              side: const BorderSide(color: AppColors.accent, width: 1.5),
             ),
           ),
-          const SizedBox(height: 16),
+          const SizedBox(height: 20),
           const Center(
             child: Text(
               'ecommerce_app · v1.0.0',
-              style: TextStyle(fontSize: 12, color: AppColors.textSecondary),
+              style: TextStyle(
+                fontSize: 12,
+                fontWeight: FontWeight.w600,
+                color: AppColors.textTertiary,
+              ),
             ),
           ),
         ],
@@ -83,90 +87,134 @@ class ProfileScreen extends StatelessWidget {
   }
 }
 
-class _ProfileHeader extends StatelessWidget {
-  const _ProfileHeader();
-
-  @override
-  Widget build(BuildContext context) {
-    return Row(
-      children: <Widget>[
-        Container(
-          width: 72,
-          height: 72,
-          decoration: const BoxDecoration(
-            gradient: LinearGradient(
-              begin: Alignment.topLeft,
-              end: Alignment.bottomRight,
-              colors: <Color>[AppColors.primary, AppColors.accent],
-            ),
-            shape: BoxShape.circle,
-          ),
-          child: const Center(
-            child: Text(
-              'FA',
-              style: TextStyle(
-                color: Colors.white,
-                fontSize: 24,
-                fontWeight: FontWeight.w800,
-              ),
-            ),
-          ),
-        ),
-        const SizedBox(width: 16),
-        const Expanded(
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: <Widget>[
-              Text(
-                'Felix Azaglo',
-                style: TextStyle(
-                  fontSize: 20,
-                  fontWeight: FontWeight.w800,
-                  color: AppColors.textPrimary,
-                ),
-              ),
-              SizedBox(height: 4),
-              Text(
-                'felix@example.com',
-                style: TextStyle(
-                  fontSize: 13,
-                  color: AppColors.textSecondary,
-                ),
-              ),
-              SizedBox(height: 8),
-              _ProBadge(),
-            ],
-          ),
-        ),
-      ],
-    );
-  }
-}
-
-class _ProBadge extends StatelessWidget {
-  const _ProBadge();
+class _MemberCard extends StatelessWidget {
+  const _MemberCard();
 
   @override
   Widget build(BuildContext context) {
     return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
+      height: 196,
       decoration: BoxDecoration(
-        color: AppColors.primaryLight,
-        borderRadius: BorderRadius.circular(20),
+        borderRadius: BorderRadius.circular(28),
+        gradient: const LinearGradient(
+          begin: Alignment.topLeft,
+          end: Alignment.bottomRight,
+          colors: <Color>[Color(0xFF1E1E28), Color(0xFF101016)],
+        ),
+        boxShadow: AppColors.floatingShadow,
       ),
-      child: const Row(
-        mainAxisSize: MainAxisSize.min,
+      padding: const EdgeInsets.all(24),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
         children: <Widget>[
-          Icon(Icons.workspace_premium_rounded,
-              size: 14, color: AppColors.primary),
-          SizedBox(width: 4),
-          Text(
-            'Gold Member',
-            style: TextStyle(
-              fontSize: 11,
-              fontWeight: FontWeight.w700,
-              color: AppColors.primary,
-            ),
+          Row(
+            children: <Widget>[
+              Container(
+                width: 54,
+                height: 54,
+                decoration: const BoxDecoration(
+                  shape: BoxShape.circle,
+                  gradient: LinearGradient(
+                    begin: Alignment.topLeft,
+                    end: Alignment.bottomRight,
+                    colors: <Color>[AppColors.accent, AppColors.violet],
+                  ),
+                ),
+                child: const Center(
+                  child: Text(
+                    'FA',
+                    style: TextStyle(
+                      color: Colors.white,
+                      fontSize: 18,
+                      fontWeight: FontWeight.w800,
+                    ),
+                  ),
+                ),
+              ),
+              const SizedBox(width: 14),
+              const Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: <Widget>[
+                    Text(
+                      'Felix Azaglo',
+                      style: TextStyle(
+                        color: Colors.white,
+                        fontSize: 19,
+                        fontWeight: FontWeight.w800,
+                        letterSpacing: -0.4,
+                      ),
+                    ),
+                    SizedBox(height: 3),
+                    Text(
+                      'felix@example.com',
+                      style: TextStyle(
+                        color: Color(0xFF9A9AAE),
+                        fontSize: 13,
+                        fontWeight: FontWeight.w500,
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ],
+          ),
+          const Spacer(),
+          Row(
+            children: <Widget>[
+              Flexible(
+                child: FittedBox(
+                  fit: BoxFit.scaleDown,
+                  alignment: Alignment.centerLeft,
+                  child: Container(
+                    padding: const EdgeInsets.symmetric(
+                      horizontal: 12,
+                      vertical: 6,
+                    ),
+                    decoration: BoxDecoration(
+                      color: Colors.white.withValues(alpha: 0.14),
+                      borderRadius: BorderRadius.circular(20),
+                    ),
+                    child: const Row(
+                      mainAxisSize: MainAxisSize.min,
+                      children: <Widget>[
+                        Icon(
+                          Icons.workspace_premium_rounded,
+                          size: 14,
+                          color: AppColors.star,
+                        ),
+                        SizedBox(width: 6),
+                        Text(
+                          'GOLD MEMBER',
+                          style: TextStyle(
+                            color: Colors.white,
+                            fontSize: 10,
+                            letterSpacing: 1.0,
+                            fontWeight: FontWeight.w800,
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
+              ),
+              const Spacer(),
+              const Flexible(
+                child: FittedBox(
+                  fit: BoxFit.scaleDown,
+                  alignment: Alignment.centerRight,
+                  child: Text(
+                    '••••  4821',
+                    style: TextStyle(
+                      color: Color(0xFF7C7C90),
+                      fontSize: 14,
+                      fontWeight: FontWeight.w700,
+                      letterSpacing: 1.5,
+                    ),
+                  ),
+                ),
+              ),
+            ],
           ),
         ],
       ),
@@ -174,8 +222,8 @@ class _ProBadge extends StatelessWidget {
   }
 }
 
-class _StatsCard extends StatelessWidget {
-  const _StatsCard({required this.shop});
+class _StatsRow extends StatelessWidget {
+  const _StatsRow({required this.shop});
 
   final ShopState shop;
 
@@ -184,16 +232,18 @@ class _StatsCard extends StatelessWidget {
     return Container(
       decoration: BoxDecoration(
         color: AppColors.surface,
-        borderRadius: BorderRadius.circular(20),
+        borderRadius: BorderRadius.circular(24),
+        border: Border.all(color: AppColors.cardBorder),
+        boxShadow: AppColors.softShadow,
       ),
-      padding: const EdgeInsets.symmetric(vertical: 20),
+      padding: const EdgeInsets.symmetric(vertical: 22),
       child: Row(
         children: <Widget>[
           _StatItem(value: '12', label: 'Orders'),
           const _StatDivider(),
-          _StatItem(value: '${shop.wishlistCount}', label: 'Wishlist'),
+          _StatItem(value: '${shop.wishlistCount}', label: 'Saved'),
           const _StatDivider(),
-          _StatItem(value: '${shop.cartCount}', label: 'In cart'),
+          _StatItem(value: '${shop.cartCount}', label: 'In bag'),
         ],
       ),
     );
@@ -214,9 +264,10 @@ class _StatItem extends StatelessWidget {
           Text(
             value,
             style: const TextStyle(
-              fontSize: 20,
-              fontWeight: FontWeight.w800,
-              color: AppColors.primary,
+              fontSize: 22,
+              fontWeight: FontWeight.w900,
+              letterSpacing: -0.6,
+              color: AppColors.textPrimary,
             ),
           ),
           const SizedBox(height: 4),
@@ -224,6 +275,7 @@ class _StatItem extends StatelessWidget {
             label,
             style: const TextStyle(
               fontSize: 12,
+              fontWeight: FontWeight.w600,
               color: AppColors.textSecondary,
             ),
           ),
@@ -238,7 +290,7 @@ class _StatDivider extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Container(width: 1, height: 36, color: AppColors.divider);
+    return Container(width: 1, height: 38, color: AppColors.divider);
   }
 }
 
@@ -251,16 +303,22 @@ class _MenuGroup extends StatelessWidget {
   Widget build(BuildContext context) {
     return Material(
       color: AppColors.surface,
-      borderRadius: BorderRadius.circular(20),
+      borderRadius: BorderRadius.circular(24),
       clipBehavior: Clip.antiAlias,
-      child: Column(
-        children: <Widget>[
-          for (int i = 0; i < items.length; i++) ...<Widget>[
-            _MenuTile(item: items[i]),
-            if (i != items.length - 1)
-              const Divider(height: 1, indent: 64),
+      child: Container(
+        decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(24),
+          border: Border.all(color: AppColors.cardBorder),
+        ),
+        child: Column(
+          children: <Widget>[
+            for (int i = 0; i < items.length; i++) ...<Widget>[
+              _MenuTile(item: items[i]),
+              if (i != items.length - 1)
+                const Divider(height: 1, indent: 68),
+            ],
           ],
-        ],
+        ),
       ),
     );
   }
@@ -274,20 +332,21 @@ class _MenuTile extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return ListTile(
+      contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 4),
       leading: Container(
-        width: 40,
-        height: 40,
+        width: 42,
+        height: 42,
         decoration: BoxDecoration(
-          color: AppColors.primaryLight,
-          borderRadius: BorderRadius.circular(12),
+          color: AppColors.surfaceSecondary,
+          borderRadius: BorderRadius.circular(14),
         ),
-        child: Icon(item.icon, size: 20, color: AppColors.primary),
+        child: Icon(item.icon, size: 20, color: AppColors.textPrimary),
       ),
       title: Text(
         item.title,
         style: const TextStyle(
           fontSize: 15,
-          fontWeight: FontWeight.w600,
+          fontWeight: FontWeight.w700,
           color: AppColors.textPrimary,
         ),
       ),
@@ -297,7 +356,7 @@ class _MenuTile extends StatelessWidget {
       ),
       trailing: const Icon(
         Icons.chevron_right_rounded,
-        color: AppColors.textSecondary,
+        color: AppColors.textTertiary,
       ),
       onTap: () => ScaffoldMessenger.of(context)
         ..hideCurrentSnackBar()

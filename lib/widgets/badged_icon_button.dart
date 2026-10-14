@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 
 import '../theme/app_colors.dart';
 
-/// Icon button that shows a small count badge (e.g. cart item count).
+/// Round-square icon button with a floating count badge.
 class BadgedIconButton extends StatelessWidget {
   const BadgedIconButton({
     super.key,
@@ -22,28 +22,35 @@ class BadgedIconButton extends StatelessWidget {
     return Stack(
       clipBehavior: Clip.none,
       children: <Widget>[
-        IconButton(
-          onPressed: onTap,
-          tooltip: tooltip,
-          icon: Icon(icon, color: AppColors.textPrimary),
-          style: IconButton.styleFrom(
-            backgroundColor: AppColors.surface,
-            shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(14),
+        Material(
+          color: AppColors.surface,
+          borderRadius: BorderRadius.circular(16),
+          child: InkWell(
+            borderRadius: BorderRadius.circular(16),
+            onTap: onTap,
+            child: Container(
+              width: 46,
+              height: 46,
+              alignment: Alignment.center,
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(16),
+                border: Border.all(color: AppColors.cardBorder),
+              ),
+              child: Icon(icon, color: AppColors.textPrimary, size: 22),
             ),
           ),
         ),
         if (count > 0)
           Positioned(
-            right: 4,
-            top: 4,
+            right: -2,
+            top: -2,
             child: Container(
               padding: const EdgeInsets.symmetric(horizontal: 5, vertical: 1),
-              constraints: const BoxConstraints(minWidth: 18),
+              constraints: const BoxConstraints(minWidth: 20),
               decoration: BoxDecoration(
                 color: AppColors.accent,
-                borderRadius: BorderRadius.circular(9),
-                border: Border.all(color: AppColors.background, width: 1.5),
+                borderRadius: BorderRadius.circular(10),
+                border: Border.all(color: AppColors.background, width: 2),
               ),
               child: Text(
                 count > 99 ? '99+' : '$count',
@@ -51,7 +58,7 @@ class BadgedIconButton extends StatelessWidget {
                 style: const TextStyle(
                   color: Colors.white,
                   fontSize: 10,
-                  fontWeight: FontWeight.w700,
+                  fontWeight: FontWeight.w800,
                 ),
               ),
             ),

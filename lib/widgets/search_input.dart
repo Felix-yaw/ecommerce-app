@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 
 import '../theme/app_colors.dart';
 
-/// Rounded search input with a leading icon and clear button.
+/// Modern search input with soft fill and clear affordance.
 class SearchInput extends StatefulWidget {
   const SearchInput({
     super.key,
@@ -10,12 +10,16 @@ class SearchInput extends StatefulWidget {
     required this.onChanged,
     this.autofocus = false,
     this.hintText = 'Search products, brands…',
+    this.readOnly = false,
+    this.onTap,
   });
 
   final String initialValue;
   final ValueChanged<String> onChanged;
   final bool autofocus;
   final String hintText;
+  final bool readOnly;
+  final VoidCallback? onTap;
 
   @override
   State<SearchInput> createState() => _SearchInputState();
@@ -42,6 +46,8 @@ class _SearchInputState extends State<SearchInput> {
     return TextField(
       controller: _controller,
       autofocus: widget.autofocus,
+      readOnly: widget.readOnly,
+      onTap: widget.onTap,
       textInputAction: TextInputAction.search,
       onChanged: (String value) {
         widget.onChanged(value);
@@ -51,7 +57,7 @@ class _SearchInputState extends State<SearchInput> {
         hintText: widget.hintText,
         prefixIcon: const Icon(
           Icons.search_rounded,
-          color: AppColors.textSecondary,
+          color: AppColors.textTertiary,
         ),
         suffixIcon: _controller.text.isEmpty
             ? null

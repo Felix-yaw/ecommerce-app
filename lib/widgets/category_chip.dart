@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import '../models/product_category.dart';
 import '../theme/app_colors.dart';
 
-/// Pill-shaped category selector used on the home screen.
+/// Dribbble-style tactile category chip with scale animation and subtle glow.
 class CategoryChip extends StatelessWidget {
   const CategoryChip({
     super.key,
@@ -19,19 +19,26 @@ class CategoryChip extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return AnimatedContainer(
-      duration: const Duration(milliseconds: 200),
-      curve: Curves.easeOut,
+      duration: const Duration(milliseconds: 220),
+      curve: Curves.easeOutCubic,
       decoration: BoxDecoration(
         color: selected ? AppColors.primary : AppColors.surface,
-        borderRadius: BorderRadius.circular(14),
+        borderRadius: BorderRadius.circular(22),
+        border: Border.all(
+          color: selected ? AppColors.primary : AppColors.cardBorder,
+          width: 1.2,
+        ),
+        boxShadow: selected
+            ? AppColors.glowPrimary
+            : AppColors.softShadow,
       ),
       child: Material(
         color: Colors.transparent,
         child: InkWell(
-          borderRadius: BorderRadius.circular(14),
+          borderRadius: BorderRadius.circular(22),
           onTap: onTap,
           child: Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 10),
+            padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 11),
             child: Row(
               mainAxisSize: MainAxisSize.min,
               children: <Widget>[
@@ -40,12 +47,13 @@ class CategoryChip extends StatelessWidget {
                   size: 16,
                   color: selected ? Colors.white : AppColors.textSecondary,
                 ),
-                const SizedBox(width: 7),
+                const SizedBox(width: 8),
                 Text(
                   category.name,
                   style: TextStyle(
                     fontSize: 13,
-                    fontWeight: FontWeight.w600,
+                    fontWeight: selected ? FontWeight.w800 : FontWeight.w600,
+                    letterSpacing: -0.2,
                     color: selected ? Colors.white : AppColors.textPrimary,
                   ),
                 ),

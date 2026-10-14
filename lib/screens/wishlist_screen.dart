@@ -7,8 +7,9 @@ import '../state/shop_state.dart';
 import '../theme/app_colors.dart';
 import '../widgets/empty_state.dart';
 import '../widgets/product_card.dart';
+import '../widgets/reveal.dart';
 
-/// Saved products tab.
+/// Saved products tab with elegant list cards.
 class WishlistScreen extends StatelessWidget {
   const WishlistScreen({super.key, this.onBrowse});
 
@@ -21,46 +22,50 @@ class WishlistScreen extends StatelessWidget {
 
     return Scaffold(
       appBar: AppBar(
-        title: Text('Wishlist${products.isEmpty ? '' : ' (${products.length})'}'),
+        title: Text(
+          'Saved${products.isEmpty ? '' : ' (${products.length})'}',
+        ),
       ),
       body: products.isEmpty
           ? EmptyState(
               icon: Icons.favorite_border_rounded,
-              title: 'No favourites yet',
+              title: 'Nothing saved yet',
               message:
-                  'Tap the heart on any product to save it here for later.',
+                  'Tap the heart on any product to keep it here for later.',
               actionLabel: 'Discover products',
               onAction: onBrowse,
             )
           : ListView.separated(
-              padding: const EdgeInsets.fromLTRB(20, 8, 20, 24),
+              padding: const EdgeInsets.fromLTRB(20, 8, 20, 120),
               itemCount: products.length,
-              separatorBuilder: (_, _) => const SizedBox(height: 12),
+              separatorBuilder: (_, _) => const SizedBox(height: 14),
               itemBuilder: (BuildContext context, int index) {
                 final Product product = products[index];
-                return ProductListCard(
-                  product: product,
-                  onTap: () => AppRoutes.openProduct(context, product),
-                  trailing: Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: <Widget>[
-                      IconButton(
-                        tooltip: 'Remove',
-                        onPressed: () => shop.toggleWishlist(product),
-                        icon: const Icon(
-                          Icons.favorite_rounded,
+                return Reveal(
+                  delay: Duration(milliseconds: 45 * index),
+                  child: ProductListCard(
+                    product: product,
+                    onTap: () => AppRoutes.openProduct(context, product),
+                    trailing: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: <Widget>[
+                        _CircleIconButton(
+                          icon: Icons.favorite_rounded,
                           color: AppColors.accent,
+                          background: AppColors.accentLight,
+                          tooltip: 'Remove',
+                          onTap: () => shop.toggleWishlist(product),
                         ),
-                      ),
-                      IconButton(
-                        tooltip: 'Add to cart',
-                        onPressed: () => _addToCart(context, shop, product),
-                        icon: const Icon(
-                          Icons.add_shopping_cart_rounded,
-                          color: AppColors.primary,
+                        const SizedBox(height: 8),
+                        _CircleIconButton(
+                          icon: Icons.add_shopping_cart_rounded,
+                          color: Colors.white,
+                          background: AppColors.primary,
+                          tooltip: 'Add to bag',
+                          onTap: () => _addToCart(context, shop, product),
                         ),
-                      ),
-                    ],
+                      ],
+                    ),
                   ),
                 );
               },
@@ -73,7 +78,43 @@ class WishlistScreen extends StatelessWidget {
     ScaffoldMessenger.of(context)
       ..hideCurrentSnackBar()
       ..showSnackBar(
-        SnackBar(content: Text('${product.name} added to cart')),
+        SnackBar(content: Text('${product.name} added to bag')),
       );
+  }
+}
+
+class _CircleIconButton extends StatelessWidget {
+  const _CircleIconButton({
+    required this.icon,
+    required this.color,
+    required this.background,
+    required this.onTap,
+    this.tooltip,
+  });
+
+  final IconData icon;
+  final Color color;
+  final Color background;
+  final VoidCallback onTap;
+  final String? tooltip;
+
+  @override
+  Widget build(BuildContext context) {
+    return Tooltip(
+      message: tooltip ?? '',
+      child: Material(
+        color: background,
+        shape: const CircleBorder(),
+        child: InkWell(
+          customBorder: const CircleBorder(),
+          onTap: onTap,
+          child: SizedBox(
+            width: 42,
+            height: 42,
+            child: Icon(icon, size: 19, color: color),
+          ),
+        ),
+      ),
+    );
   }
 }
