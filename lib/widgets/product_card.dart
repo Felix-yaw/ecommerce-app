@@ -9,10 +9,10 @@ import 'price_text.dart';
 import 'rating_stars.dart';
 import 'wishlist_button.dart';
 
-/// Ultra-modern, Dribbble-inspired vertical product card.
+/// Ultra-modern vertical product card for the home, search and category grids.
 ///
-/// Features an isolated image stage, floating glass pill badges,
-/// spring wishlist heart, and a tactile quick-add cart button.
+/// Features an isolated image stage, a floating discount flag, a spring
+/// wishlist heart and a tactile quick-add cart button.
 class ProductCard extends StatelessWidget {
   const ProductCard({
     super.key,
@@ -32,12 +32,13 @@ class ProductCard extends StatelessWidget {
           duration: const Duration(milliseconds: 1400),
           content: Row(
             children: <Widget>[
-              const Icon(Icons.check_circle_rounded,
-                  color: AppColors.success, size: 20),
-              const SizedBox(width: 10),
-              Expanded(
-                child: Text('Added ${product.name} to bag'),
+              const Icon(
+                Icons.check_circle_rounded,
+                color: AppColors.success,
+                size: 20,
               ),
+              const SizedBox(width: 10),
+              Expanded(child: Text('Added ${product.name} to bag')),
             ],
           ),
         ),
@@ -62,7 +63,6 @@ class ProductCard extends StatelessWidget {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: <Widget>[
-              // Top Image Stage
               Expanded(
                 child: Stack(
                   fit: StackFit.expand,
@@ -113,8 +113,6 @@ class ProductCard extends StatelessWidget {
                   ],
                 ),
               ),
-
-              // Bottom Details
               Padding(
                 padding: const EdgeInsets.fromLTRB(14, 4, 14, 14),
                 child: Column(
@@ -167,10 +165,7 @@ class ProductCard extends StatelessWidget {
                           child: FittedBox(
                             fit: BoxFit.scaleDown,
                             alignment: Alignment.centerLeft,
-                            child: PriceText(
-                              product: product,
-                              priceSize: 17,
-                            ),
+                            child: PriceText(product: product, priceSize: 17),
                           ),
                         ),
                         _QuickAddButton(onTap: () => _quickAdd(context)),
@@ -237,105 +232,7 @@ class _QuickAddButtonState extends State<_QuickAddButton> {
               ),
             ],
           ),
-          child: const Icon(
-            Icons.add_rounded,
-            color: Colors.white,
-            size: 19,
-          ),
-        ),
-      ),
-    );
-  }
-}
-
-/// Horizontal product card with sleek stage framing.
-class ProductListCard extends StatelessWidget {
-  const ProductListCard({
-    super.key,
-    required this.product,
-    required this.onTap,
-    this.trailing,
-  });
-
-  final Product product;
-  final VoidCallback onTap;
-  final Widget? trailing;
-
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      decoration: BoxDecoration(
-        color: AppColors.surface,
-        borderRadius: BorderRadius.circular(22),
-        border: Border.all(color: AppColors.cardBorder),
-        boxShadow: AppColors.softShadow,
-      ),
-      child: Material(
-        color: Colors.transparent,
-        borderRadius: BorderRadius.circular(22),
-        clipBehavior: Clip.antiAlias,
-        child: InkWell(
-          onTap: onTap,
-          child: Padding(
-            padding: const EdgeInsets.all(12),
-            child: Row(
-              crossAxisAlignment: CrossAxisAlignment.center,
-              children: <Widget>[
-                Container(
-                  width: 90,
-                  height: 90,
-                  decoration: BoxDecoration(
-                    color: AppColors.surfaceSecondary,
-                    borderRadius: BorderRadius.circular(16),
-                  ),
-                  clipBehavior: Clip.antiAlias,
-                  child: NetworkProductImage(
-                    url: product.imageUrl,
-                    width: 90,
-                    height: 90,
-                    fit: BoxFit.cover,
-                  ),
-                ),
-                const SizedBox(width: 14),
-                Expanded(
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: <Widget>[
-                      Text(
-                        product.brand.toUpperCase(),
-                        style: const TextStyle(
-                          fontSize: 10,
-                          letterSpacing: 0.8,
-                          fontWeight: FontWeight.w800,
-                          color: AppColors.textTertiary,
-                        ),
-                      ),
-                      const SizedBox(height: 3),
-                      Text(
-                        product.name,
-                        maxLines: 2,
-                        overflow: TextOverflow.ellipsis,
-                        style: const TextStyle(
-                          fontSize: 14,
-                          fontWeight: FontWeight.w700,
-                          height: 1.25,
-                          color: AppColors.textPrimary,
-                        ),
-                      ),
-                      const SizedBox(height: 8),
-                      FittedBox(
-                        fit: BoxFit.scaleDown,
-                        alignment: Alignment.centerLeft,
-                        child: PriceText(product: product, priceSize: 16),
-                      ),
-                    ],
-                  ),
-                ),
-                ?trailing,
-              ],
-            ),
-          ),
+          child: const Icon(Icons.add_rounded, color: Colors.white, size: 19),
         ),
       ),
     );

@@ -7,7 +7,7 @@ import '../state/shop_state.dart';
 import '../theme/app_colors.dart';
 import '../widgets/circle_icon_button.dart';
 import '../widgets/empty_state.dart';
-import '../widgets/product_card.dart';
+import '../widgets/product_list_card.dart';
 import '../widgets/reveal.dart';
 
 /// Saved products tab with elegant list cards.
