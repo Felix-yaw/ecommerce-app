@@ -7,6 +7,7 @@ import '../cart_line_tile.dart';
 import '../reveal.dart';
 import 'cart_summary.dart';
 import 'free_shipping_banner.dart';
+import 'free_shipping_progress.dart';
 
 /// The filled-cart layout: shipping hint, item list and summary.
 class CartBody extends StatelessWidget {

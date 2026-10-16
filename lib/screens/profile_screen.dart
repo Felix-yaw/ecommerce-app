@@ -5,6 +5,7 @@ import '../state/shop_state.dart';
 import '../theme/app_colors.dart';
 import '../widgets/profile/member_card.dart';
 import '../widgets/profile/profile_menu.dart';
+import '../widgets/profile/profile_menu_item.dart';
 import '../widgets/profile/profile_stats.dart';
 
 /// Account tab with a premium membership card and settings list.

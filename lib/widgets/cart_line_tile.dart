@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import '../models/cart_item.dart';
 import '../theme/app_colors.dart';
 import 'network_product_image.dart';
-import 'quantity_stepper.dart';
+import 'quantity_stepper/quantity_stepper.dart';
 
 /// One elegant row inside the cart list.
 class CartLineTile extends StatelessWidget {

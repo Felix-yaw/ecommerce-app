@@ -7,7 +7,7 @@ import '../models/product_category.dart';
 import '../navigation/app_routes.dart';
 import '../state/shop_state.dart';
 import '../theme/app_colors.dart';
-import '../widgets/product_card.dart';
+import '../widgets/product_card/product_card.dart';
 import '../widgets/reveal.dart';
 
 /// "See all" screen listing every product within a category, with sorting.

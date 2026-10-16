@@ -4,7 +4,7 @@ import 'package:provider/provider.dart';
 import '../../models/product.dart';
 import '../../navigation/app_routes.dart';
 import '../../state/shop_state.dart';
-import '../product_card.dart';
+import '../product_card/product_card.dart';
 import '../reveal.dart';
 
 /// Lazily-built grid of products for the selected category.

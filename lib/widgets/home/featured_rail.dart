@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import '../../data/sample_data.dart';
 import '../../models/product.dart';
 import '../../navigation/app_routes.dart';
-import '../product_card.dart';
+import '../product_card/product_card.dart';
 import '../reveal.dart';
 
 /// Horizontally scrolling rail of featured products.

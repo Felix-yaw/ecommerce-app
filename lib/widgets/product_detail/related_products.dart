@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 
 import '../../data/sample_data.dart';
 import '../../models/product.dart';
-import '../product_card.dart';
+import '../product_card/product_card.dart';
 import '../reveal.dart';
 import '../section_header.dart';
 

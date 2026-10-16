@@ -1,13 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
-import '../models/product.dart';
-import '../state/shop_state.dart';
-import '../theme/app_colors.dart';
-import 'network_product_image.dart';
-import 'price_text.dart';
-import 'rating_stars.dart';
-import 'wishlist_button.dart';
+import '../../models/product.dart';
+import '../../state/shop_state.dart';
+import '../../theme/app_colors.dart';
+import '../network_product_image.dart';
+import '../price_text.dart';
+import '../rating_stars.dart';
+import '../wishlist_button.dart';
+import 'quick_add_button.dart';
+import 'tag_badge.dart';
 
 /// Ultra-modern vertical product card for the home, search and category grids.
 ///
@@ -85,7 +87,7 @@ class ProductCard extends StatelessWidget {
                       Positioned(
                         top: 16,
                         left: 16,
-                        child: _TagBadge(
+                        child: TagBadge(
                           text: '-${product.discountPercent}%',
                           backgroundColor: AppColors.accent,
                           textColor: Colors.white,
@@ -95,7 +97,7 @@ class ProductCard extends StatelessWidget {
                       const Positioned(
                         top: 16,
                         left: 16,
-                        child: _TagBadge(
+                        child: TagBadge(
                           text: 'HOT',
                           backgroundColor: AppColors.primary,
                           textColor: Colors.white,
@@ -168,7 +170,7 @@ class ProductCard extends StatelessWidget {
                             child: PriceText(product: product, priceSize: 17),
                           ),
                         ),
-                        _QuickAddButton(onTap: () => _quickAdd(context)),
+                        QuickAddButton(onTap: () => _quickAdd(context)),
                       ],
                     ),
                   ],
@@ -176,102 +178,6 @@ class ProductCard extends StatelessWidget {
               ),
             ],
           ),
-        ),
-      ),
-    );
-  }
-}
-
-/// Tactile floating "+" button that pops an item into the cart.
-class _QuickAddButton extends StatefulWidget {
-  const _QuickAddButton({required this.onTap});
-
-  final VoidCallback onTap;
-
-  @override
-  State<_QuickAddButton> createState() => _QuickAddButtonState();
-}
-
-class _QuickAddButtonState extends State<_QuickAddButton> {
-  double _scale = 1.0;
-
-  void _handleTapDown(TapDownDetails _) {
-    setState(() => _scale = 0.85);
-  }
-
-  void _handleTapUp(TapUpDetails _) {
-    setState(() => _scale = 1.0);
-    widget.onTap();
-  }
-
-  void _handleTapCancel() {
-    setState(() => _scale = 1.0);
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    return GestureDetector(
-      onTapDown: _handleTapDown,
-      onTapUp: _handleTapUp,
-      onTapCancel: _handleTapCancel,
-      child: AnimatedScale(
-        scale: _scale,
-        duration: const Duration(milliseconds: 120),
-        curve: Curves.easeOut,
-        child: Container(
-          width: 32,
-          height: 32,
-          decoration: const BoxDecoration(
-            color: AppColors.primary,
-            shape: BoxShape.circle,
-            boxShadow: <BoxShadow>[
-              BoxShadow(
-                color: Color(0x2A000000),
-                blurRadius: 8,
-                offset: Offset(0, 3),
-              ),
-            ],
-          ),
-          child: const Icon(Icons.add_rounded, color: Colors.white, size: 19),
-        ),
-      ),
-    );
-  }
-}
-
-class _TagBadge extends StatelessWidget {
-  const _TagBadge({
-    required this.text,
-    required this.backgroundColor,
-    required this.textColor,
-  });
-
-  final String text;
-  final Color backgroundColor;
-  final Color textColor;
-
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 9, vertical: 4),
-      decoration: BoxDecoration(
-        color: backgroundColor,
-        borderRadius: BorderRadius.circular(20),
-        boxShadow: const <BoxShadow>[
-          BoxShadow(
-            color: Color(0x18000000),
-            blurRadius: 6,
-            offset: Offset(0, 2),
-          ),
-        ],
-      ),
-      child: Text(
-        text,
-        style: TextStyle(
-          color: textColor,
-          fontSize: 10,
-          fontWeight: FontWeight.w800,
-          letterSpacing: 0.5,
         ),
       ),
     );

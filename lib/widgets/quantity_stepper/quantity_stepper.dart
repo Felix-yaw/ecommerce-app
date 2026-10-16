@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
-import '../theme/app_colors.dart';
+import '../../theme/app_colors.dart';
+import 'step_button.dart';
 
 /// Sleek pill-shaped quantity stepper with circular controls.
 class QuantityStepper extends StatelessWidget {
@@ -30,7 +31,7 @@ class QuantityStepper extends StatelessWidget {
       child: Row(
         mainAxisSize: MainAxisSize.min,
         children: <Widget>[
-          _StepButton(
+          StepButton(
             icon: Icons.remove_rounded,
             dimension: dimension,
             onTap: onDecrement,
@@ -48,48 +49,13 @@ class QuantityStepper extends StatelessWidget {
               ),
             ),
           ),
-          _StepButton(
+          StepButton(
             icon: Icons.add_rounded,
             dimension: dimension,
             onTap: onIncrement,
             filled: true,
           ),
         ],
-      ),
-    );
-  }
-}
-
-class _StepButton extends StatelessWidget {
-  const _StepButton({
-    required this.icon,
-    required this.dimension,
-    required this.onTap,
-    this.filled = false,
-  });
-
-  final IconData icon;
-  final double dimension;
-  final VoidCallback onTap;
-  final bool filled;
-
-  @override
-  Widget build(BuildContext context) {
-    return Material(
-      color: filled ? AppColors.primary : AppColors.surface,
-      shape: const CircleBorder(),
-      child: InkWell(
-        customBorder: const CircleBorder(),
-        onTap: onTap,
-        child: SizedBox(
-          width: dimension,
-          height: dimension,
-          child: Icon(
-            icon,
-            size: 18,
-            color: filled ? Colors.white : AppColors.textPrimary,
-          ),
-        ),
       ),
     );
   }

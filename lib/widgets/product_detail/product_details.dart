@@ -4,7 +4,7 @@ import '../../models/product.dart';
 import '../../theme/app_colors.dart';
 import '../group_heading.dart';
 import '../price_text.dart';
-import '../quantity_stepper.dart';
+import '../quantity_stepper/quantity_stepper.dart';
 import '../rating_stars.dart';
 import 'color_selector.dart';
 import 'size_selector.dart';
